@@ -1,5 +1,5 @@
 from flask import Flask
-from app.controllers.ml_controller import ml_bp
+from controllers.ml_controller import ml_bp
 
 app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
 
