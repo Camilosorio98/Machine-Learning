@@ -600,10 +600,10 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">Machine Learning Project · CRISP-ML</div>
-  <h1>Detection of <em>Commercial Informality</em> Patterns</h1>
+  <div class="hero-badge">Machine Learning Project · CRISP-ML · DANE Open Data 2023–2024</div>
+  <h1>Intelligent System to Detect <em>Commercial Informality</em> Patterns</h1>
   <p class="hero-sub">
-    An intelligent system based on open economic data to identify and map commercial informality in Colombian cities, applying the CRISP-ML methodology.
+    Using the EMICRON dataset (DANE, 2023–2024) and K-Means clustering to identify commercial informality profiles across Colombian cities — enabling smarter, data-driven formalization policy.
   </p>
   <div class="hero-ctas">
     <a href="#negocio" class="btn-primary">Explore Project</a>
@@ -611,20 +611,20 @@
   </div>
   <div class="hero-meta">
     <div class="meta-item">
-      <div class="meta-num">CRISP<span>-ML</span></div>
-      <div class="meta-label">Methodology</div>
+      <div class="meta-num">55<span>.8%</span></div>
+      <div class="meta-label">National Informality Rate (2024)</div>
     </div>
     <div class="meta-item">
-      <div class="meta-num">K<span>-Means</span></div>
-      <div class="meta-label">Algorithm</div>
+      <div class="meta-num">84<span>.7%</span></div>
+      <div class="meta-label">Informality in Micro-businesses</div>
     </div>
     <div class="meta-item">
-      <div class="meta-num">~<span>63%</span></div>
-      <div class="meta-label">Informality in Colombia</div>
+      <div class="meta-num">77<span>.6%</span></div>
+      <div class="meta-label">Micro-businesses without RUT</div>
     </div>
     <div class="meta-item">
-      <div class="meta-num">Open<span> Data</span></div>
-      <div class="meta-label">Primary Source</div>
+      <div class="meta-num">EMICRON<span> 2023</span></div>
+      <div class="meta-label">Primary Dataset · DANE</div>
     </div>
   </div>
 </div>
@@ -654,7 +654,7 @@
     <p class="section-label">Phase 01 · CRISP-ML</p>
     <h2>Business and Data Understanding</h2>
     <p class="section-desc">
-      Translating business and social needs into concrete goals for the machine learning project, aligning technical effort with real-world impact.
+      Colombia has one of the highest informality rates in Latin America. According to DANE's GEIH (2024), <strong style="color:var(--white)">55.8% of all employed workers</strong> operate informally — and the rate jumps to <strong style="color:var(--accent)">84.7% inside micro-businesses</strong>, which employ 62% of the country's workforce. This project uses open data to make that problem measurable and actionable.
     </p>
   </div>
 
@@ -663,25 +663,28 @@
     <div class="neg-card c1">
       <div class="neg-icon">🎯</div>
       <h3>Business Objectives</h3>
-      <p>Identify and characterize sectors with high concentrations of informal commerce in Colombian cities to support formalization policies and efficient allocation of government resources.</p>
+      <p>Apply K-Means clustering to the DANE EMICRON dataset to automatically segment Colombian micro-businesses by informality profile. The goal is to give local governments and chambers of commerce a data-driven tool to prioritize formalization efforts — moving beyond generic national averages toward actionable city-level intelligence.</p>
     </div>
 
     <div class="neg-card c2">
       <div class="neg-icon">❓</div>
       <h3>Key Questions</h3>
-      <p>What socioeconomic variables predict commercial informality? Which zones are at highest risk? What patterns do informal traders share in common?</p>
+      <p>
+        <strong style="color:var(--white); font-size:.82rem; display:block; margin-bottom:.4rem">The model must answer:</strong>
+        Which combination of variables (income, RUT, ARL, location, sector) best predicts informality level? Which cities show the highest concentration of high-risk clusters? Can we identify a "gateway to formality" profile — businesses that are informal but almost ready to formalize?
+      </p>
     </div>
 
     <div class="neg-card c3">
       <div class="neg-icon">📊</div>
       <h3>Data Assessment</h3>
-      <p>Explore the quality, relevance, and sufficiency of available data from DANE, datos.gov.co, and other Colombian open economic data sources.</p>
+      <p>The primary source is the <strong style="color:var(--white)">EMICRON 2023 microdata</strong> (DANE, ~12,000+ downloads), which covers micro-businesses with up to 9 employees across 24 departments and Bogotá D.C. It includes 7 modules: economic activity, entrepreneurship, location, workforce, business characteristics, ICT use, and financial inclusion.</p>
     </div>
 
     <div class="neg-card c4">
       <div class="neg-icon">⚖️</div>
       <h3>Feasibility Analysis</h3>
-      <p>Consider technical, ethical, and organizational constraints; ensure the model is reproducible, fair, and technically viable with the available data.</p>
+      <p>The EMICRON dataset is publicly available at <em>microdatos.dane.gov.co</em> and is updated annually, making the model reproducible and updatable. Key risk: the dataset is anonymized, so individual businesses cannot be re-identified. Spatial granularity is limited to the municipal level — a known constraint documented in the DANE methodology guide.</p>
     </div>
 
   </div>
@@ -691,23 +694,55 @@
     <cite class="quote-cite">— Schmid, Wurst, & Wirth (2020). CRISP-ML(Q): A Machine Learning Process Model with Quality Assurance Methodology.</cite>
   </div>
 
-  <!-- Colombian context -->
+  <!-- Real data stats -->
   <div class="two-col reveal" style="margin-top:3rem">
     <div>
-      <p class="section-label">Context</p>
-      <h2 style="font-size:1.6rem">Informality in Colombia</h2>
+      <p class="section-label">Real Problem · DANE Data</p>
+      <h2 style="font-size:1.6rem">Why This Problem Matters</h2>
       <p class="section-desc" style="margin-top:1rem">
-        According to DANE, approximately 63% of Colombian workers are employed in the informal sector. Mid-sized cities such as Fusagasugá, Pasto, and Montería show even higher rates, with limited social security coverage and access to formal credit.
+        Cities with the <strong style="color:var(--white)">highest informality rates</strong> (GEIH, 2023) are Sincelejo (70%), Riohacha (63.9%), and Valledupar (63.3%). The lowest are Bogotá (32.9%), Manizales (34.2%), and Medellín (37%). This 37-point spread shows that informality is highly localized — exactly the kind of pattern ML clustering can detect and quantify. Meanwhile, <strong style="color:var(--accent)">93.6% of micro-business owners</strong> made no contributions to occupational risk insurance (ARL) in 2024, leaving millions of workers completely unprotected.
       </p>
     </div>
     <div style="display:flex;flex-direction:column;gap:1rem;justify-content:center">
       <div class="info-box">
-        <h4>📍 Study Area</h4>
-        <p>Colombian cities with open data available on the datos.gov.co portal and DANE labor market records.</p>
+        <h4>📍 Cities in Scope</h4>
+        <p>The EMICRON dataset covers <strong style="color:var(--white)">24 departments + Bogotá D.C.</strong>, with city-level breakdowns available for the 23 main metropolitan areas tracked by the GEIH — including Sincelejo, Barranquilla, Cali, Medellín, and Bogotá.</p>
       </div>
       <div class="info-box">
         <h4>🎓 Stakeholders</h4>
-        <p>Municipal governments, Chambers of Commerce, MinCIT, economic policy researchers, and the academic project team.</p>
+        <p>Municipal governments, MinCIT, Chambers of Commerce, DNP (Departamento Nacional de Planeación), and academic researchers in labor economics and public policy.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="model-features reveal" style="margin-top:2.5rem">
+    <div class="feat">
+      <div class="feat-icon">📉</div>
+      <div class="feat-text">
+        <strong>Downward trend — but slow</strong>
+        <span>National informality fell from 58.0% (2022) to 55.8% (2024) — a 2.2 p.p. drop in two years (DANE, GEIH).</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🏪</div>
+      <div class="feat-text">
+        <strong>Micro-businesses are the epicenter</strong>
+        <span>84.7% of workers in micro-businesses are informal vs. only 3.1% in large firms (DANE, Q2 2024).</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🪪</div>
+      <div class="feat-text">
+        <strong>No RUT · No Registry</strong>
+        <span>In 2024, 77.6% of micro-businesses had no RUT (tax ID). In rural/populated centers that figure reaches 94% (EMICRON 2024).</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🌍</div>
+      <div class="feat-text">
+        <strong>Unobserved Economy (ENO)</strong>
+        <span>DANE estimates Colombia's informal/unobserved economy represents 24.4% of total production and 29.9% of value added (EMICRON 2024).</span>
       </div>
     </div>
   </div>
@@ -723,7 +758,7 @@
     <p class="section-label">Phase 02 · CRISP-ML</p>
     <h2>Data Engineering</h2>
     <p class="section-desc">
-      Data engineering is a fundamental pillar of the process. This phase focuses on properly preparing data for modeling, maximizing its predictive potential and minimizing risks of bias or overfitting.
+      The primary dataset is the <strong style="color:var(--white)">EMICRON 2023</strong> (Encuesta de Micronegocios — DANE), publicly available at <em>microdatos.dane.gov.co</em>. It covers micro-businesses with up to 9 employees across 24 departments and Bogotá D.C., and is the most complete official source for mapping commercial informality at the municipal level in Colombia.
     </p>
   </div>
 
@@ -735,9 +770,9 @@
         <div class="ing-line"></div>
       </div>
       <div class="ing-content">
-        <h3>Data Selection</h3>
-        <p>Identify relevant data sources: DANE (Gran Encuesta Integrada de Hogares), datos.gov.co, chamber of commerce records, and municipal economic censuses.</p>
-        <span class="ing-tag">Open Sources</span>
+        <h3>Data Selection — EMICRON + GEIH</h3>
+        <p>The EMICRON 2023 microdata (DANE) is the backbone of this project. It records over 7 modules per micro-business: economic activity (CIIU code), location, workforce characteristics, formalization variables (RUT, Chamber of Commerce), ICT access, and financial inclusion. The GEIH (Gran Encuesta Integrada de Hogares) is used as a complementary source to enrich city-level informality rates. Both datasets are open access on <em>microdatos.dane.gov.co</em>.</p>
+        <span class="ing-tag">EMICRON 2023 · GEIH · datos.gov.co</span>
       </div>
     </div>
 
@@ -747,8 +782,8 @@
         <div class="ing-line" style="background:linear-gradient(to bottom,var(--accent),transparent)"></div>
       </div>
       <div class="ing-content">
-        <h3>Data Cleaning</h3>
-        <p>Fix errors, handle missing values through imputation, remove duplicates, and standardize formats for municipalities, economic sectors, and CIIU codes.</p>
+        <h3>Data Cleaning — Handling Real Gaps</h3>
+        <p>The EMICRON has been through DANE's official anonymization protocol (removing direct and pseudo-identifiers), so no individual business can be traced. Key cleaning tasks: handle missing values in income variables (the "Ventas mes anterior" field had a 7% imputation rate in Q4 2024), standardize CIIU economic sector codes, remove out-of-scope activities (utilities, air transport, finance), and unify department/municipality naming conventions across survey years.</p>
         <span class="ing-tag" style="color:var(--accent);background:rgba(232,71,138,.12)">Preprocessing</span>
       </div>
     </div>
@@ -760,8 +795,8 @@
       </div>
       <div class="ing-content">
         <h3>Transformation & Feature Engineering</h3>
-        <p>Create new features such as informality index by zone, income-to-basic-basket ratio, commercial density per km², and normalize numerical variables for the clustering algorithm.</p>
-        <span class="ing-tag" style="color:var(--accent3);background:rgba(0,212,170,.12)">Features</span>
+        <p>From the raw EMICRON variables, we engineer a composite <strong style="color:var(--white)">Informality Index</strong> per record, combining: absence of RUT (76.2% of businesses in 2023), no Chamber of Commerce registration, no ARL contributions (93.6% of owners in 2024), no accounting records, and no pension/health contributions. Each factor is binarized and weighted. Numerical variables (income, number of employees, years in operation) are normalized using StandardScaler before feeding into K-Means.</p>
+        <span class="ing-tag" style="color:var(--accent3);background:rgba(0,212,170,.12)">Feature Engineering</span>
       </div>
     </div>
 
@@ -771,9 +806,9 @@
         <div class="ing-line"></div>
       </div>
       <div class="ing-content">
-        <h3>Documentation</h3>
-        <p>Record all transformations performed, design decisions, data lineage, and metadata to ensure process reproducibility as recommended by ML-Ops.org.</p>
-        <span class="ing-tag" style="color:#ffa500;background:rgba(255,165,0,.12)">Reproducibility</span>
+        <h3>Documentation & Reproducibility</h3>
+        <p>All transformation steps are logged in a Jupyter Notebook hosted on GitHub, following the ML-Ops.org reproducibility guidelines. The EMICRON data dictionary (DDI/XML) is included as metadata. Each pipeline step records: data version (EMICRON 2023, survey reference Q4 2024 bulletin), Python library versions (pandas, scikit-learn), and the anonymization protocol reference from DANE's official documentation.</p>
+        <span class="ing-tag" style="color:#ffa500;background:rgba(255,165,0,.12)">Reproducibility · GitHub</span>
       </div>
     </div>
 
@@ -781,56 +816,56 @@
 
   <div class="quote-block reveal" style="border-left-color:var(--accent2)">
     <p>"All transformations and decisions must be meticulously documented to ensure process reproducibility, thus facilitating future revisions or updates to the model."</p>
-    <cite class="quote-cite">— ML-Ops.org · Best practices in data engineering for ML production projects.</cite>
+    <cite class="quote-cite">— ML-Ops.org · Best practices in data engineering for ML production projects. | DANE EMICRON 2023: microdatos.dane.gov.co/index.php/catalog/832</cite>
   </div>
 
-  <!-- Key variables -->
+  <!-- Real EMICRON variables -->
   <div class="reveal" style="margin-top:3rem">
-    <p class="section-label">Dataset Variables</p>
-    <h2 style="font-size:1.5rem">Main features for the model</h2>
+    <p class="section-label">EMICRON 2023 · Real Dataset Variables</p>
+    <h2 style="font-size:1.5rem">Features used for K-Means clustering</h2>
   </div>
 
   <div class="model-features reveal" style="margin-top:1.5rem">
     <div class="feat">
       <div class="feat-icon">💰</div>
       <div class="feat-text">
-        <strong>Income Level</strong>
-        <span>Average monthly income of the trader by zone</span>
+        <strong>Monthly Sales (Ventas mes anterior)</strong>
+        <span>Reported monthly income per micro-business. 7% imputation rate — handled via median imputation by sector and city (EMICRON Q4 2024).</span>
       </div>
     </div>
     <div class="feat">
-      <div class="feat-icon">🏪</div>
+      <div class="feat-icon">🪪</div>
       <div class="feat-text">
-        <strong>Business Type</strong>
-        <span>Kiosk, street stall, fixed premises, mobile vendor</span>
+        <strong>RUT Ownership (Módulo F)</strong>
+        <span>Binary flag: 77.6% of micro-businesses nationwide had no RUT in 2024. In rural areas: 94%. Key informality signal.</span>
       </div>
     </div>
     <div class="feat">
-      <div class="feat-icon">📋</div>
+      <div class="feat-icon">🏛️</div>
       <div class="feat-text">
-        <strong>Formal Registration</strong>
-        <span>Tax ID (RUT), chamber of commerce registration, social security affiliation</span>
+        <strong>Chamber of Commerce Registration</strong>
+        <span>In Bogotá (2023), only 27.1% of micro-businesses were registered. 46.2% kept no accounting records (EMICRON-DANE, SDDE-ODEB).</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🏥</div>
+      <div class="feat-text">
+        <strong>Health & Pension Contributions</strong>
+        <span>Owners who made no health/pension contributions increased 3.3% between 2023–2024. Only 6.4% contributed to ARL (EMICRON 2024).</span>
       </div>
     </div>
     <div class="feat">
       <div class="feat-icon">📍</div>
       <div class="feat-text">
-        <strong>Geolocation</strong>
-        <span>Municipality, neighborhood, GPS coordinates of the establishment</span>
-      </div>
-    </div>
-    <div class="feat">
-      <div class="feat-icon">👥</div>
-      <div class="feat-text">
-        <strong>Trader Characteristics</strong>
-        <span>Age, education level, years in business, number of employees</span>
+        <strong>Location Type (Módulo D)</strong>
+        <span>Fixed local, street stall, home-based, mobile vendor. Location type is strongly correlated with formality level across all cities in the dataset.</span>
       </div>
     </div>
     <div class="feat">
       <div class="feat-icon">🔢</div>
       <div class="feat-text">
-        <strong>CIIU Code</strong>
-        <span>Economic classification of the commercial or productive sector</span>
+        <strong>CIIU Economic Sector Code</strong>
+        <span>Covers agriculture, manufacturing, commerce, construction, transport, and services. Excluded by DANE: utilities, finance, air transport (operated by larger firms).</span>
       </div>
     </div>
   </div>
@@ -846,15 +881,15 @@
     <p class="section-label">Phase 03 · CRISP-ML</p>
     <h2>Machine Learning Model</h2>
     <p class="section-desc">
-      Application of unsupervised learning to discover latent patterns of commercial informality without the need for predefined labels.
+      Unsupervised learning is the right approach here: we don't have pre-labeled "formal/informal" ground-truth labels per business, but we do have rich multi-dimensional data that reveals natural groupings. K-Means has already been applied to detect commercial patterns in Colombian cities — a 2021 study using street-view imagery in Medellín found <strong style="color:var(--white)">5 distinct clusters</strong> of commercial activity, confirming the viability of the clustering approach for this context.
     </p>
   </div>
 
   <div class="model-card reveal">
-    <div class="model-type-badge">Unsupervised Learning</div>
-    <h3>K-Means Clustering · Pattern Detection</h3>
+    <div class="model-type-badge">Unsupervised Learning · K-Means Clustering</div>
+    <h3>Detecting Informality Profiles from EMICRON Data</h3>
     <p>
-      K-Means groups commercial records into <strong style="color:var(--accent2)">k clusters</strong> based on similarity in economic variables. Each cluster represents a <em>trader profile</em>, automatically identifying high-informality segments without the need for pre-labeled data.
+      K-Means groups each EMICRON micro-business record into <strong style="color:var(--accent2)">k clusters</strong> based on similarity across the engineered informality features. Each cluster surfaces a distinct <em>trader profile</em> — from "fully informal, no registration, cash-only" to "borderline formal, has RUT but no ARL." This segmentation lets policymakers move beyond the blunt national average (55.8%) and target specific profiles in specific cities.
     </p>
 
     <div class="model-features" style="margin-top:2rem">
@@ -862,56 +897,85 @@
         <div class="feat-icon">🔍</div>
         <div class="feat-text">
           <strong>Why K-Means?</strong>
-          <span>No labels required. Efficiently identifies hidden structures in multidimensional economic data.</span>
+          <span>No labels needed. Efficient on tabular survey data. Prior research in Medellín (2021, arXiv:2104.04545) found 5 clusters of commercial activity using spatial ML — validating the approach for Colombia.</span>
         </div>
       </div>
       <div class="feat">
         <div class="feat-icon">📐</div>
         <div class="feat-text">
-          <strong>Selecting k</strong>
-          <span>Elbow Method and Silhouette Coefficient to determine the optimal number of clusters.</span>
+          <strong>Selecting k · Elbow + Silhouette</strong>
+          <span>We test k = 3 to 7, using the Elbow Method and Silhouette Coefficient. Expected result: 3–5 clusters mapping to clearly distinct informality profiles across the EMICRON data.</span>
         </div>
       </div>
       <div class="feat">
         <div class="feat-icon">⚡</div>
         <div class="feat-text">
-          <strong>Preprocessing</strong>
-          <span>Normalization with StandardScaler and dimensionality reduction with PCA for result visualization.</span>
+          <strong>Preprocessing Pipeline</strong>
+          <span>StandardScaler for numerical vars (income, employees, years in operation) + OneHotEncoder for categorical vars (CIIU sector, location type, department) + PCA for 2D visualization.</span>
         </div>
       </div>
       <div class="feat">
         <div class="feat-icon">📈</div>
         <div class="feat-text">
           <strong>Evaluation Metrics</strong>
-          <span>Silhouette Score, Davies-Bouldin Index, and cohesion/separation analysis between clusters.</span>
+          <span>Silhouette Score (target ≥ 0.4), Davies-Bouldin Index (lower = better), and within-cluster sum of squares (WCSS) for Elbow curve analysis.</span>
         </div>
       </div>
       <div class="feat">
         <div class="feat-icon">🗺️</div>
         <div class="feat-text">
           <strong>Visualization</strong>
-          <span>Heat maps by municipality, 2D/3D scatter plots, and dashboards with cluster profiles.</span>
+          <span>PCA 2D scatter plot colored by cluster, city-level choropleth map showing dominant cluster per municipality, and radar charts for cluster profile comparison.</span>
         </div>
       </div>
       <div class="feat">
         <div class="feat-icon">🛠️</div>
         <div class="feat-text">
           <strong>Tech Stack</strong>
-          <span>Python · scikit-learn · pandas · matplotlib · seaborn · Jupyter Notebook · GitHub</span>
+          <span>Python 3.11 · scikit-learn · pandas · matplotlib · seaborn · plotly · Jupyter Notebook · GitHub Pages</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Expected outcomes -->
+  <!-- Expected cluster profiles -->
+  <div class="reveal" style="margin-top:2.5rem">
+    <p class="section-label">Expected Output</p>
+    <h2 style="font-size:1.5rem">Hypothetical Cluster Profiles from EMICRON</h2>
+  </div>
+
+  <div class="model-features reveal" style="margin-top:1.5rem">
+    <div class="feat" style="border-color:rgba(232,71,138,.3)">
+      <div class="feat-icon">🔴</div>
+      <div class="feat-text">
+        <strong>Cluster A · Deeply Informal</strong>
+        <span>No RUT, no Cámara registration, no ARL, cash-only sales. Concentrated in Sincelejo, Riohacha, Valledupar. Estimated: ~40–45% of records.</span>
+      </div>
+    </div>
+    <div class="feat" style="border-color:rgba(255,165,0,.3)">
+      <div class="feat-icon">🟠</div>
+      <div class="feat-text">
+        <strong>Cluster B · Borderline Informal</strong>
+        <span>Has RUT but no Cámara registration. Some health contributions. Medium-income. "Gateway to formality" segment — highest policy leverage.</span>
+      </div>
+    </div>
+    <div class="feat" style="border-color:rgba(0,212,170,.3)">
+      <div class="feat-icon">🟢</div>
+      <div class="feat-text">
+        <strong>Cluster C · Near-Formal</strong>
+        <span>RUT + Cámara registration, basic accounting, some ARL. Concentrated in Bogotá (32.9% informality) and Medellín (37%). Needs mainly pension/health incentives.</span>
+      </div>
+    </div>
+  </div>
+
   <div class="two-col reveal" style="margin-top:2.5rem">
     <div class="info-box" style="border-color:rgba(0,212,170,.25)">
       <h4 style="color:var(--accent3)">✅ Expected Outcome</h4>
-      <p>Identify between 3 and 5 trader profiles with varying degrees of informality, generating differentiated public policy recommendations by segment and municipality.</p>
+      <p>A reproducible Python pipeline + trained K-Means model that can be applied to each new EMICRON annual release to track cluster evolution year-over-year — giving governments a live dashboard of formalization progress by city and sector.</p>
     </div>
     <div class="info-box" style="border-color:rgba(232,71,138,.25)">
-      <h4 style="color:var(--accent)">⚠️ Limitations</h4>
-      <p>Sensitivity to outliers, the need to scale data, and the number of clusters must be defined a priori. Quality depends directly on the availability and completeness of open data.</p>
+      <h4 style="color:var(--accent)">⚠️ Known Limitations</h4>
+      <p>K-Means assumes spherical clusters and is sensitive to outliers. The EMICRON's anonymization removes direct location below the department level. K must be defined a priori. Model quality depends directly on DANE's annual data release cycle.</p>
     </div>
   </div>
 </section>
@@ -919,7 +983,8 @@
 <!-- FOOTER -->
 <footer>
   <p>Academic Project · <strong>Machine Learning · CRISP-ML(Q)</strong> · Methodology for ML Projects</p>
-  <p style="margin-top:.5rem">Detection of Commercial Informality Patterns in Colombian Cities · Open Economic Data</p>
+  <p style="margin-top:.5rem">Data sources: DANE EMICRON 2023 (microdatos.dane.gov.co) · GEIH 2024 · Banco de la República · ML-Ops.org</p>
+  <p style="margin-top:.4rem; font-size:.78rem; color: #555">Schmid et al. (2020) · arXiv:2104.04545 (Medellín clustering study) · DNP Informe Mercado Laboral 2024</p>
 </footer>
 
 <script>
