@@ -309,9 +309,9 @@
     #negocio { scroll-margin-top: 80px; }
 
     .negocio-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
       margin-top: 3rem;
     }
 
@@ -319,47 +319,91 @@
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 1.75rem;
+      padding: 1.5rem 1.75rem;
       position: relative;
       overflow: hidden;
       transition: transform .25s, border-color .25s;
+      display: grid;
+      grid-template-columns: 56px 180px 1fr;
+      align-items: start;
+      gap: 0 1.5rem;
     }
 
     .neg-card::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      top: 0; left: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
       opacity: 0;
       transition: opacity .25s;
     }
 
-    .neg-card:hover { transform: translateY(-4px); border-color: rgba(232,71,138,.3); }
+    .neg-card:hover { transform: translateX(4px); border-color: rgba(232,71,138,.3); }
     .neg-card:hover::before { opacity: 1; }
 
     .neg-icon {
-      width: 44px; height: 44px;
+      width: 48px; height: 48px;
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.3rem;
-      margin-bottom: 1.25rem;
+      font-size: 1.4rem;
+      margin-bottom: 0;
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+
+    .neg-card-label {
+      padding-top: .15rem;
+      border-right: 1px solid var(--border);
+      padding-right: 1.5rem;
     }
 
     .neg-card h3 {
       font-family: 'Syne', sans-serif;
       font-weight: 700;
-      font-size: 1.05rem;
+      font-size: 1rem;
       color: var(--white);
-      margin-bottom: .5rem;
+      margin-bottom: .25rem;
+      line-height: 1.2;
     }
 
-    .neg-card p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+    .neg-card-num {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity: .45;
+    }
+
+    .neg-card p { font-size: .9rem; color: var(--muted); line-height: 1.6; margin: 0; }
 
     .neg-card.c1 .neg-icon { background: rgba(232,71,138,.15); color: var(--accent); }
+    .neg-card.c1 .neg-card-num { color: var(--accent); }
     .neg-card.c2 .neg-icon { background: rgba(108,99,255,.15); color: var(--accent2); }
+    .neg-card.c2 .neg-card-num { color: var(--accent2); }
     .neg-card.c3 .neg-icon { background: rgba(0,212,170,.15); color: var(--accent3); }
+    .neg-card.c3 .neg-card-num { color: var(--accent3); }
     .neg-card.c4 .neg-icon { background: rgba(255,165,0,.15); color: #ffa500; }
+    .neg-card.c4 .neg-card-num { color: #ffa500; }
+
+    @media (max-width: 680px) {
+      .neg-card {
+        grid-template-columns: 48px 1fr;
+        grid-template-rows: auto auto;
+      }
+      .neg-card-label {
+        grid-column: 2;
+        border-right: none;
+        padding-right: 0;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: .75rem;
+        margin-bottom: .75rem;
+      }
+      .neg-card > ul,
+      .neg-card > p:last-child {
+        grid-column: 1 / -1;
+      }
+    }
 
     /* big quote block */
     .quote-block {
@@ -662,7 +706,10 @@
 
     <div class="neg-card c1">
       <div class="neg-icon">🎯</div>
-      <h3>Business Objectives</h3>
+      <div class="neg-card-label">
+        <div class="neg-card-num">01 · Objective</div>
+        <h3>Business Objectives</h3>
+      </div>
       <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.65rem;">
         <li style="display:flex; gap:.6rem; align-items:flex-start; font-size:.88rem; color:var(--muted); line-height:1.55;">
           <span style="color:var(--accent); font-size:.7rem; margin-top:.35rem; flex-shrink:0;">◆</span>
@@ -685,35 +732,32 @@
 
     <div class="neg-card c2">
       <div class="neg-icon">❓</div>
-      <h3>Key Questions</h3>
-      <p style="margin-bottom:.75rem"><strong style="color:var(--white); font-size:.82rem;">The model must answer:</strong></p>
+      <div class="neg-card-label">
+        <div class="neg-card-num">02 · Questions</div>
+        <h3>Key Questions</h3>
+      </div>
       <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.65rem;">
         <li style="display:flex; gap:.6rem; align-items:flex-start; font-size:.88rem; color:var(--muted); line-height:1.55;">
           <span style="color:var(--accent2); font-size:.7rem; margin-top:.35rem; flex-shrink:0;">◆</span>
-          <span>Which combination of variables — income level, RUT registration, ARL contribution, location type, and CIIU sector — most strongly predicts a business's degree of informality?</span>
+          <span>Which combination of variables (income, RUT, ARL, location, sector) best predicts informality level?</span>
         </li>
         <li style="display:flex; gap:.6rem; align-items:flex-start; font-size:.88rem; color:var(--muted); line-height:1.55;">
           <span style="color:var(--accent2); font-size:.7rem; margin-top:.35rem; flex-shrink:0;">◆</span>
-          <span>Which cities and departments show the highest concentration of deeply informal clusters? Are Caribbean coast cities (Sincelejo 70%, Riohacha 63.9%) systematically different from Andean cities (Bogotá 32.9%)?</span>
+          <span>Which cities show the highest concentration of high-risk clusters?</span>
         </li>
         <li style="display:flex; gap:.6rem; align-items:flex-start; font-size:.88rem; color:var(--muted); line-height:1.55;">
           <span style="color:var(--accent2); font-size:.7rem; margin-top:.35rem; flex-shrink:0;">◆</span>
-          <span>Can we identify a <em style="color:var(--white);">"gateway to formality"</em> cluster — businesses that are technically informal but already have partial compliance (e.g., have RUT but no Cámara de Comercio registration)?</span>
-        </li>
-        <li style="display:flex; gap:.6rem; align-items:flex-start; font-size:.88rem; color:var(--muted); line-height:1.55;">
-          <span style="color:var(--accent2); font-size:.7rem; margin-top:.35rem; flex-shrink:0;">◆</span>
-          <span>Does the economic sector (CIIU) determine informality level independently of city? For example, are street-food vendors structurally more informal than home-based manufacturing businesses?</span>
-        </li>
-        <li style="display:flex; gap:.6rem; align-items:flex-start; font-size:.88rem; color:var(--muted); line-height:1.55;">
-          <span style="color:var(--accent2); font-size:.7rem; margin-top:.35rem; flex-shrink:0;">◆</span>
-          <span>How stable are the detected clusters across annual EMICRON releases (2022 → 2023 → 2024)? Is informality decreasing within the same segments, or are clusters shifting composition?</span>
+          <span>Can we identify a "gateway to formality" profile — businesses that are informal but almost ready to formalize?</span>
         </li>
       </ul>
     </div>
 
     <div class="neg-card c3">
       <div class="neg-icon">📊</div>
-      <h3>Data Assessment</h3>
+      <div class="neg-card-label">
+        <div class="neg-card-num">03 · Data</div>
+        <h3>Data Assessment</h3>
+      </div>
       <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.65rem;">
         <li style="display:flex; gap:.6rem; align-items:flex-start; font-size:.88rem; color:var(--muted); line-height:1.55;">
           <span style="color:var(--accent3); font-size:.7rem; margin-top:.35rem; flex-shrink:0;">◆</span>
@@ -736,7 +780,10 @@
 
     <div class="neg-card c4">
       <div class="neg-icon">⚖️</div>
-      <h3>Feasibility Analysis</h3>
+      <div class="neg-card-label">
+        <div class="neg-card-num">04 · Viability</div>
+        <h3>Feasibility Analysis</h3>
+      </div>
       <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:.65rem;">
         <li style="display:flex; gap:.6rem; align-items:flex-start; font-size:.88rem; color:var(--muted); line-height:1.55;">
           <span style="color:#ffa500; font-size:.7rem; margin-top:.35rem; flex-shrink:0;">◆</span>
