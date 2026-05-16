@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detección de Informalidad Comercial · CRISP-ML</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0f1a;
+      --surface: #141828;
+      --card: #1c2035;
+      --border: #2a3050;
+      --accent: #e8478a;
+      --accent2: #6c63ff;
+      --accent3: #00d4aa;
+      --text: #e8eaf6;
+      --muted: #8892b0;
+      --white: #ffffff;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── MESH GRADIENT BG ── */
+    .mesh {
+      position: fixed; inset: 0; z-index: -1;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 20%, rgba(108,99,255,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 80% 80%, rgba(232,71,138,.14) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 60% 30%, rgba(0,212,170,.08) 0%, transparent 60%),
+        var(--bg);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(13,15,26,.85);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--white);
+      letter-spacing: -.02em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .9rem;
+      font-weight: 500;
+      transition: color .2s;
+      letter-spacing: .02em;
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-pill {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-size: .8rem;
+      font-weight: 700;
+      padding: .35rem .9rem;
+      border-radius: 99px;
+      text-decoration: none;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 92vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 5rem 2rem 4rem;
+      position: relative;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(232,71,138,.12);
+      border: 1px solid rgba(232,71,138,.3);
+      color: var(--accent);
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .4rem 1rem;
+      border-radius: 99px;
+      margin-bottom: 2rem;
+      animation: fadeUp .6s ease both;
+    }
+
+    .hero-badge::before {
+      content: '●';
+      font-size: .55rem;
+      animation: pulse 2s ease infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: .3; }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -.04em;
+      color: var(--white);
+      max-width: 900px;
+      animation: fadeUp .7s .1s ease both;
+    }
+
+    h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 680px;
+      font-weight: 300;
+      animation: fadeUp .8s .2s ease both;
+    }
+
+    .hero-ctas {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2.5rem;
+      animation: fadeUp .9s .3s ease both;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #c7365f);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: .95rem;
+      padding: .85rem 2rem;
+      border: none; border-radius: 12px;
+      cursor: pointer; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 8px 32px rgba(232,71,138,.35);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(232,71,138,.45); }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      font-size: .95rem;
+      padding: .85rem 2rem;
+      border-radius: 12px;
+      cursor: pointer; text-decoration: none;
+      transition: border-color .2s, background .2s;
+    }
+
+    .btn-ghost:hover { border-color: var(--muted); background: rgba(255,255,255,.04); }
+
+    /* meta strip */
+    .hero-meta {
+      display: flex; gap: 3rem; flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 4rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+      width: 100%;
+      max-width: 900px;
+      animation: fadeUp 1s .4s ease both;
+    }
+
+    .meta-item { text-align: center; }
+    .meta-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--white);
+    }
+    .meta-num span { color: var(--accent); }
+    .meta-label { font-size: .8rem; color: var(--muted); margin-top: .25rem; letter-spacing: .05em; text-transform: uppercase; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 6rem 2rem; max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: .75rem;
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      max-width: 620px;
+      margin-top: .85rem;
+      font-size: 1rem;
+    }
+
+    /* ── CRISP-ML PIPELINE ── */
+    .pipeline-strip {
+      background: linear-gradient(135deg, var(--accent2) 0%, var(--accent) 100%);
+      padding: 3rem 2rem;
+      position: relative; overflow: hidden;
+    }
+
+    .pipeline-strip::before {
+      content: 'CRISP-ML';
+      position: absolute;
+      right: -1rem; top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Syne', sans-serif;
+      font-size: 8rem;
+      font-weight: 800;
+      color: rgba(255,255,255,.06);
+      letter-spacing: -.04em;
+      pointer-events: none;
+    }
+
+    .pipeline-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .pipe-step {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 10px;
+      padding: .65rem 1.2rem;
+      font-weight: 600;
+      font-size: .85rem;
+      color: #fff;
+      white-space: nowrap;
+      backdrop-filter: blur(6px);
+    }
+
+    .pipe-arrow {
+      color: rgba(255,255,255,.5);
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+
+    .pipe-step.active {
+      background: rgba(255,255,255,.25);
+      border-color: rgba(255,255,255,.5);
+      box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    }
+
+    /* ── NEGOCIO SECTION ── */
+    #negocio { scroll-margin-top: 80px; }
+
+    .negocio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+
+    .neg-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform .25s, border-color .25s;
+    }
+
+    .neg-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity .25s;
+    }
+
+    .neg-card:hover { transform: translateY(-4px); border-color: rgba(232,71,138,.3); }
+    .neg-card:hover::before { opacity: 1; }
+
+    .neg-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .neg-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--white);
+      margin-bottom: .5rem;
+    }
+
+    .neg-card p { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+
+    .neg-card.c1 .neg-icon { background: rgba(232,71,138,.15); color: var(--accent); }
+    .neg-card.c2 .neg-icon { background: rgba(108,99,255,.15); color: var(--accent2); }
+    .neg-card.c3 .neg-icon { background: rgba(0,212,170,.15); color: var(--accent3); }
+    .neg-card.c4 .neg-icon { background: rgba(255,165,0,.15); color: #ffa500; }
+
+    /* big quote block */
+    .quote-block {
+      margin-top: 3rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 16px 16px 0;
+      padding: 2rem 2rem 2rem 2.5rem;
+    }
+
+    .quote-block p { font-size: 1rem; color: var(--text); font-style: italic; font-weight: 300; }
+    .quote-cite { display: block; margin-top: .75rem; font-size: .82rem; color: var(--muted); font-style: normal; font-weight: 500; }
+
+    /* ── INGENIERÍA SECTION ── */
+    #ingenieria { scroll-margin-top: 80px; }
+
+    .ing-flow {
+      margin-top: 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .ing-step {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 0 1.5rem;
+      align-items: start;
+    }
+
+    .ing-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .ing-circle {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      border: 2px solid var(--border);
+      background: var(--card);
+      transition: border-color .25s;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ing-line {
+      width: 2px;
+      flex: 1;
+      min-height: 2rem;
+      background: linear-gradient(to bottom, var(--accent2), transparent);
+      margin: 4px 0;
+    }
+
+    .ing-step:last-child .ing-line { display: none; }
+
+    .ing-content {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: border-color .25s, transform .25s;
+    }
+
+    .ing-content:hover { border-color: rgba(108,99,255,.4); transform: translateX(4px); }
+    .ing-content:hover + div .ing-circle,
+    .ing-step:hover .ing-circle { border-color: var(--accent2); }
+
+    .ing-content h3 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--white);
+      margin-bottom: .4rem;
+    }
+
+    .ing-content p { font-size: .9rem; color: var(--muted); }
+
+    .ing-tag {
+      display: inline-block;
+      background: rgba(108,99,255,.15);
+      color: var(--accent2);
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .25rem .65rem;
+      border-radius: 6px;
+      margin-top: .75rem;
+    }
+
+    /* two-col info */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+    .info-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+    }
+
+    .info-box h4 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--white);
+      margin-bottom: .6rem;
+    }
+
+    .info-box p { font-size: .88rem; color: var(--muted); }
+
+    /* ── MODEL SECTION ── */
+    #modelo { scroll-margin-top: 80px; }
+
+    .model-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2.5rem;
+      margin-top: 3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .model-card::after {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(108,99,255,.25), transparent 70%);
+      pointer-events: none;
+    }
+
+    .model-type-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--accent2), #4c44d4);
+      color: #fff;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: .4rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .model-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: .75rem;
+    }
+
+    .model-card > p { color: var(--muted); font-size: .95rem; max-width: 680px; }
+
+    .model-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .feat {
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      display: flex; gap: .75rem; align-items: flex-start;
+    }
+
+    .feat-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: .1rem; }
+
+    .feat-text strong {
+      display: block;
+      font-size: .88rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: .25rem;
+    }
+
+    .feat-text span { font-size: .82rem; color: var(--muted); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+    }
+
+    footer p { font-size: .85rem; color: var(--muted); }
+    footer strong { color: var(--text); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      max-width: 1100px;
+      margin: 0 auto;
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<div class="mesh"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">CRISP<span>·</span>ML <span style="color:var(--muted);font-weight:400;font-size:.85rem;">/ Informalidad Comercial</span></div>
+  <ul class="nav-links">
+    <li><a href="#negocio">Negocio</a></li>
+    <li><a href="#ingenieria">Ingeniería</a></li>
+    <li><a href="#modelo">Modelo</a></li>
+  </ul>
+  <a href="#modelo" class="nav-pill">Ver Modelo</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Proyecto Machine Learning · CRISP-ML</div>
+  <h1>Detección de <em>Patrones de Informalidad</em> Comercial</h1>
+  <p class="hero-sub">
+    Sistema inteligente basado en datos económicos abiertos para identificar y mapear la informalidad comercial en ciudades colombianas, aplicando la metodología CRISP-ML.
+  </p>
+  <div class="hero-ctas">
+    <a href="#negocio" class="btn-primary">Explorar Proyecto</a>
+    <a href="#modelo" class="btn-ghost">Ver Modelo ML →</a>
+  </div>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <div class="meta-num">CRISP<span>-ML</span></div>
+      <div class="meta-label">Metodología</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-num">K<span>-Means</span></div>
+      <div class="meta-label">Algoritmo</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-num">~<span>63%</span></div>
+      <div class="meta-label">Informalidad en Colombia</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-num">Datos<span> Abiertos</span></div>
+      <div class="meta-label">Fuente principal</div>
+    </div>
+  </div>
+</div>
+
+<!-- PIPELINE STRIP -->
+<div class="pipeline-strip">
+  <div class="pipeline-inner">
+    <div class="pipe-step active">① Entendimiento del Negocio</div>
+    <div class="pipe-arrow">›</div>
+    <div class="pipe-step active">② Ingeniería de Datos</div>
+    <div class="pipe-arrow">›</div>
+    <div class="pipe-step">③ Ingeniería del Modelo</div>
+    <div class="pipe-arrow">›</div>
+    <div class="pipe-step">④ Calidad del Modelo</div>
+    <div class="pipe-arrow">›</div>
+    <div class="pipe-step">⑤ Despliegue</div>
+    <div class="pipe-arrow">›</div>
+    <div class="pipe-step">⑥ Monitoreo</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SECCIÓN 1: ENTENDIMIENTO DEL NEGOCIO
+════════════════════════════════════════ -->
+<section id="negocio">
+  <div class="reveal">
+    <p class="section-label">Fase 01 · CRISP-ML</p>
+    <h2>Entendimiento del Negocio y los Datos</h2>
+    <p class="section-desc">
+      Traducir las necesidades empresariales y sociales en metas concretas para el proyecto de machine learning, alineando el esfuerzo técnico con el impacto real.
+    </p>
+  </div>
+
+  <div class="negocio-grid reveal">
+
+    <div class="neg-card c1">
+      <div class="neg-icon">🎯</div>
+      <h3>Objetivos de Negocio</h3>
+      <p>Identificar y caracterizar sectores con alta concentración de comercio informal en ciudades colombianas para apoyar políticas de formalización y asignación eficiente de recursos del Estado.</p>
+    </div>
+
+    <div class="neg-card c2">
+      <div class="neg-icon">❓</div>
+      <h3>Preguntas Clave</h3>
+      <p>¿Qué variables socioeconómicas predicen la informalidad comercial? ¿Cuáles zonas presentan mayor riesgo? ¿Qué patrones comparten los comerciantes informales?</p>
+    </div>
+
+    <div class="neg-card c3">
+      <div class="neg-icon">📊</div>
+      <h3>Evaluación de Datos</h3>
+      <p>Explorar la calidad, relevancia y suficiencia de los datos disponibles provenientes del DANE, datos.gov.co y otras fuentes de datos económicos abiertos colombianos.</p>
+    </div>
+
+    <div class="neg-card c4">
+      <div class="neg-icon">⚖️</div>
+      <h3>Análisis de Viabilidad</h3>
+      <p>Considerar limitaciones técnicas, éticas y organizacionales; asegurar que el modelo sea reproducible, justo y técnicamente viable con los datos disponibles.</p>
+    </div>
+
+  </div>
+
+  <div class="quote-block reveal">
+    <p>"En esta fase inicial, es fundamental comprender profundamente los objetivos del negocio y traducirlos en metas concretas para el proyecto. Esta etapa garantiza que el esfuerzo técnico esté alineado con el valor esperado por la organización."</p>
+    <cite class="quote-cite">— Schmid, Wurst, & Wirth (2020). CRISP-ML(Q): A Machine Learning Process Model with Quality Assurance Methodology.</cite>
+  </div>
+
+  <!-- Contexto colombiano -->
+  <div class="two-col reveal" style="margin-top:3rem">
+    <div>
+      <p class="section-label">Contexto</p>
+      <h2 style="font-size:1.6rem">Informalidad en Colombia</h2>
+      <p class="section-desc" style="margin-top:1rem">
+        Según el DANE, cerca del 63% de los trabajadores colombianos se desempeñan en el sector informal. Las ciudades intermedias como Fusagasugá, Pasto y Montería presentan tasas aún más altas, con limitada cobertura de seguridad social y acceso a crédito formal.
+      </p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;justify-content:center">
+      <div class="info-box">
+        <h4>📍 Área de Estudio</h4>
+        <p>Ciudades colombianas con datos abiertos disponibles en el portal datos.gov.co y registros DANE del mercado laboral.</p>
+      </div>
+      <div class="info-box">
+        <h4>🎓 Stakeholders</h4>
+        <p>Alcaldías municipales, Cámaras de Comercio, MinCIT, investigadores de política económica y el equipo académico del proyecto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ═══════════════════════════════════════
+     SECCIÓN 2: INGENIERÍA DE DATOS
+════════════════════════════════════════ -->
+<section id="ingenieria">
+  <div class="reveal">
+    <p class="section-label">Fase 02 · CRISP-ML</p>
+    <h2>Ingeniería de Datos</h2>
+    <p class="section-desc">
+      La ingeniería de datos constituye un pilar fundamental. Esta fase se centra en preparar adecuadamente los datos para el modelado, maximizando su potencial predictivo y minimizando riesgos de sesgo o sobreajuste.
+    </p>
+  </div>
+
+  <div class="ing-flow reveal" style="margin-top:3rem">
+
+    <div class="ing-step">
+      <div class="ing-left">
+        <div class="ing-circle">🗄️</div>
+        <div class="ing-line"></div>
+      </div>
+      <div class="ing-content">
+        <h3>Selección de Datos</h3>
+        <p>Identificar fuentes de datos relevantes: DANE (Gran Encuesta Integrada de Hogares), datos.gov.co, registros de cámaras de comercio y censos económicos municipales.</p>
+        <span class="ing-tag">Fuentes abiertas</span>
+      </div>
+    </div>
+
+    <div class="ing-step">
+      <div class="ing-left">
+        <div class="ing-circle" style="border-color:rgba(232,71,138,.4)">🧹</div>
+        <div class="ing-line" style="background:linear-gradient(to bottom,var(--accent),transparent)"></div>
+      </div>
+      <div class="ing-content">
+        <h3>Limpieza de Datos</h3>
+        <p>Corregir errores, gestionar valores faltantes mediante imputación, eliminar duplicados y estandarizar formatos de municipios, sectores económicos y códigos CIIU.</p>
+        <span class="ing-tag" style="color:var(--accent);background:rgba(232,71,138,.12)">Preprocesamiento</span>
+      </div>
+    </div>
+
+    <div class="ing-step">
+      <div class="ing-left">
+        <div class="ing-circle" style="border-color:rgba(0,212,170,.4)">⚙️</div>
+        <div class="ing-line" style="background:linear-gradient(to bottom,var(--accent3),transparent)"></div>
+      </div>
+      <div class="ing-content">
+        <h3>Transformación y Feature Engineering</h3>
+        <p>Crear nuevas características como índice de informalidad por zona, ratio ingreso/canasta básica, densidad comercial por km², y normalizar variables numéricas para el algoritmo de clustering.</p>
+        <span class="ing-tag" style="color:var(--accent3);background:rgba(0,212,170,.12)">Features</span>
+      </div>
+    </div>
+
+    <div class="ing-step">
+      <div class="ing-left">
+        <div class="ing-circle" style="border-color:rgba(255,165,0,.4)">📝</div>
+        <div class="ing-line"></div>
+      </div>
+      <div class="ing-content">
+        <h3>Documentación</h3>
+        <p>Registrar todas las transformaciones realizadas, decisiones de diseño, linaje de datos y metadatos para garantizar la reproducibilidad del proceso según ML-Ops.org.</p>
+        <span class="ing-tag" style="color:#ffa500;background:rgba(255,165,0,.12)">Reproducibilidad</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="quote-block reveal" style="border-left-color:var(--accent2)">
+    <p>"Todas las transformaciones y decisiones deben documentarse meticulosamente para garantizar la reproducibilidad del proceso, facilitando así futuras revisiones o actualizaciones del modelo."</p>
+    <cite class="quote-cite">— ML-Ops.org · Buenas prácticas en ingeniería de datos para proyectos ML en producción.</cite>
+  </div>
+
+  <!-- Variables clave -->
+  <div class="reveal" style="margin-top:3rem">
+    <p class="section-label">Variables del Dataset</p>
+    <h2 style="font-size:1.5rem">Features principales para el modelo</h2>
+  </div>
+
+  <div class="model-features reveal" style="margin-top:1.5rem">
+    <div class="feat">
+      <div class="feat-icon">💰</div>
+      <div class="feat-text">
+        <strong>Nivel de ingresos</strong>
+        <span>Ingreso mensual promedio del comerciante por zona</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🏪</div>
+      <div class="feat-text">
+        <strong>Tipo de local</strong>
+        <span>Kiosco, puesto callejero, local fijo, venta ambulante</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">📋</div>
+      <div class="feat-text">
+        <strong>Registro formal</strong>
+        <span>RUT, registro cámara de comercio, afiliación a seguridad social</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">📍</div>
+      <div class="feat-text">
+        <strong>Geolocalización</strong>
+        <span>Municipio, barrio, coordenadas GPS del establecimiento</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">👥</div>
+      <div class="feat-text">
+        <strong>Características del comerciante</strong>
+        <span>Edad, escolaridad, tiempo en el negocio, número de empleados</span>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🔢</div>
+      <div class="feat-text">
+        <strong>Código CIIU</strong>
+        <span>Clasificación económica del sector comercial o productivo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ═══════════════════════════════════════
+     SECCIÓN 3: MODELO ML
+════════════════════════════════════════ -->
+<section id="modelo">
+  <div class="reveal">
+    <p class="section-label">Fase 03 · CRISP-ML</p>
+    <h2>Modelo de Machine Learning</h2>
+    <p class="section-desc">
+      Aplicación de aprendizaje no supervisado para descubrir patrones latentes de informalidad comercial sin necesidad de etiquetas predefinidas.
+    </p>
+  </div>
+
+  <div class="model-card reveal">
+    <div class="model-type-badge">Aprendizaje No Supervisado</div>
+    <h3>K-Means Clustering · Detección de Patrones</h3>
+    <p>
+      K-Means agrupa los registros comerciales en <strong style="color:var(--accent2)">k clústeres</strong> según similitud en las variables económicas. Cada clúster representa un <em>perfil de comerciante</em>, permitiendo identificar automáticamente segmentos de alta informalidad sin necesidad de datos etiquetados previos.
+    </p>
+
+    <div class="model-features" style="margin-top:2rem">
+      <div class="feat">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-text">
+          <strong>¿Por qué K-Means?</strong>
+          <span>No requiere etiquetas. Identifica estructuras ocultas en datos económicos multidimensionales de forma eficiente.</span>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📐</div>
+        <div class="feat-text">
+          <strong>Selección de k</strong>
+          <span>Método del codo (Elbow Method) y coeficiente de silueta para determinar el número óptimo de clústeres.</span>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⚡</div>
+        <div class="feat-text">
+          <strong>Preprocesamiento</strong>
+          <span>Normalización con StandardScaler y reducción dimensional con PCA para visualización de resultados.</span>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📈</div>
+        <div class="feat-text">
+          <strong>Métricas de evaluación</strong>
+          <span>Silhouette Score, Davies-Bouldin Index y análisis de cohesión/separación entre clústeres.</span>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🗺️</div>
+        <div class="feat-text">
+          <strong>Visualización</strong>
+          <span>Mapas de calor por municipio, gráficos de dispersión 2D/3D y dashboards con perfiles por clúster.</span>
+        </div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🛠️</div>
+        <div class="feat-text">
+          <strong>Stack técnico</strong>
+          <span>Python · scikit-learn · pandas · matplotlib · seaborn · Jupyter Notebook · GitHub</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expected outcomes -->
+  <div class="two-col reveal" style="margin-top:2.5rem">
+    <div class="info-box" style="border-color:rgba(0,212,170,.25)">
+      <h4 style="color:var(--accent3)">✅ Resultado Esperado</h4>
+      <p>Identificar entre 3 y 5 perfiles de comerciantes con distintos grados de informalidad, generando recomendaciones de política pública diferenciadas por segmento y municipio.</p>
+    </div>
+    <div class="info-box" style="border-color:rgba(232,71,138,.25)">
+      <h4 style="color:var(--accent)">⚠️ Limitaciones</h4>
+      <p>Sensibilidad a outliers, necesidad de escalar los datos, y el número de clústeres debe definirse a priori. La calidad depende directamente de la disponibilidad y completitud de los datos abiertos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Proyecto académico · <strong>Machine Learning · CRISP-ML(Q)</strong> · Metodología para Proyectos de ML</p>
+  <p style="margin-top:.5rem">Detección de Patrones de Informalidad Comercial en Ciudades Colombianas · Datos Económicos Abiertos</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+
+</body>
+</html>
